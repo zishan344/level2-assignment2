@@ -28,5 +28,10 @@
     "mongoose": "^8.0.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "*"
+  },
+  "dependencies": {
+    "@vee-validate/zod": "^4.11.8",
+    "vee-validate": "^4.11.8",
+    "zod": "^3.22.4"
   }
 }
