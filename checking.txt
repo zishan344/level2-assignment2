@@ -1,0 +1,3 @@
+(unsolved) need to check after complete user create if error looking error sample
+(unsolved) need to handle return empty array when create user
+(unsolved) need to remove object id when get user

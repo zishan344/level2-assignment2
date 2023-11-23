@@ -29,7 +29,7 @@ const userSchema = new Schema<IUser>({
     required: true,
   },
   email: { type: String, required: true, unique: true },
-  orders: OrdersSchema,
+  orders: { type: [OrdersSchema] },
 });
 const User = model<IUser>("users", userSchema);
 export default User;
