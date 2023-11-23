@@ -1,12 +1,17 @@
 import { Request, Response } from "express";
 import {
+  createOrderIntoDB,
   createUserIntoDB,
   deleteUserIntoDB,
   getUserIntoDB,
   getUserWithIDIntoDB,
   updateUserIntoDB,
 } from "./user.service";
-import { userValidationSchema } from "./user.validation";
+import {
+  OrdersValidationSchema,
+  userValidationSchema,
+} from "./user.validation";
+// user
 const createUser = async (req: Request, res: Response) => {
   const userData = req.body;
   try {
@@ -110,6 +115,30 @@ const deleteUser = async (req: Request, res: Response) => {
     });
   }
 };
+// user end
+
+const createOrder = async (req: Request, res: Response) => {
+  const id = req.params.userId;
+  const data = req.body;
+  try {
+    const zodParseData = OrdersValidationSchema.parse(data);
+    const result = await createOrderIntoDB(Number(id), zodParseData);
+    res.status(200).json({
+      success: true,
+      message: "Users deleted successfully!",
+      data: result,
+    });
+  } catch (err) {
+    res.status(404).json({
+      success: false,
+      message: "User not found",
+      error: {
+        code: 404,
+        description: err,
+      },
+    });
+  }
+};
 
 export const userController = {
   createUser,
@@ -117,4 +146,5 @@ export const userController = {
   getUserById,
   updateUser,
   deleteUser,
+  createOrder,
 };

@@ -1,6 +1,7 @@
 import User from "../user.model";
-import { IUser } from "./user.interface";
+import { IOrders, IUser } from "./user.interface";
 
+// user
 export const createUserIntoDB = async (data: IUser) => {
   const result = await User.create(data);
   return result;
@@ -27,6 +28,14 @@ export const deleteUserIntoDB = async (id: number) => {
   const result = await User.updateOne(
     { userId: id },
     { $set: { isActive: false } }
+  );
+  return result;
+};
+// orders
+export const createOrderIntoDB = async (id: number, data: IOrders) => {
+  const result = await User.updateOne(
+    { userId: id },
+    { $push: { orders: data } }
   );
   return result;
 };
