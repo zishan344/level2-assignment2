@@ -1,6 +1,7 @@
-(unsolved) need to check after complete user create if error looking error sample
-(unsolved) need to handle return empty array when create user
+(solved) need to check after complete user create if error looking error sample
+(solved) need to handle return empty array when create user
 (unsolved) need to remove object id when get user
 (unsolved) return all inactive account
-(unsolved) cut the object id field in order and return array 1st index
-(unsolved) cut the id field in total price calculate
+(solved) cut the object id field in order and return array 1st index
+(solved) cut the id field in total price calculate
+(unsolved) kanna kati tamate hobe get all orders ar 

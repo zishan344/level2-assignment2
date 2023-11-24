@@ -1,4 +1,4 @@
-import { Schema, Types, model } from "mongoose";
+import { Schema, model } from "mongoose";
 import { IAddress, IFullName, IOrders, IUser } from "./users/user.interface";
 import bcrypt from "bcrypt";
 const FullNameSchema = new Schema<IFullName>({
@@ -47,15 +47,7 @@ userSchema.pre("save", async function (next) {
   // console.log(hashPass);
   next();
 });
-userSchema.post("save", async function (doc, next) {
-  const userWithoutPassword: {
-    _id: Types.ObjectId;
-    password?: undefined;
-  } = doc.toObject();
 
-  delete userWithoutPassword.password;
-  next();
-});
 userSchema.pre("find", async function (next) {
   this.select("-password -orders");
 

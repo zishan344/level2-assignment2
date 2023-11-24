@@ -33,10 +33,7 @@ export const updateUserIntoDB = async (id: number, data: IUser) => {
   return result;
 };
 export const deleteUserIntoDB = async (id: number) => {
-  const result = await User.updateOne(
-    { userId: id },
-    { $set: { isActive: false } }
-  );
+  const result = await User.deleteOne({ userId: id });
   return result;
 };
 // orders
@@ -48,11 +45,20 @@ export const createOrderIntoDB = async (id: number, data: IOrders) => {
   return result;
 };
 export const getUserOrderbyIdIntoDB = async (id: number) => {
-  const result = await User.findOne({ userId: id }, "orders");
-  return result;
+  const result:
+    | (Document<unknown, Record<string, never>, IUser> &
+        IUser & {
+          _id: Types.ObjectId;
+        })
+    | undefined
+    | null = await User.findOne({ userId: id }, "orders");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { _id, ...data } = result?.toObject<IUser>();
+
+  return data;
 };
 export const getTotalOrderPriceIntoDB = async (id: number) => {
-  const result = User.aggregate([
+  const result = await User.aggregate([
     {
       $match: {
         userId: id,
@@ -74,18 +80,9 @@ export const getTotalOrderPriceIntoDB = async (id: number) => {
       },
     },
   ]);
-  /*   const result = User.aggregate([
-    {
-      $group: {
-        userid: id,
-        totalValue: {
-          $sum: {
-            $sum: "orders.data.price",
-          },
-        },
-      },
-    },
-  ]); */
 
-  return result;
+  const dt = result[0];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { _id, ...data } = dt;
+  return data;
 };
