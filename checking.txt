@@ -2,3 +2,4 @@
 (unsolved) need to handle return empty array when create user
 (unsolved) need to remove object id when get user
 (unsolved) return all inactive account
+(unsolved) cut the object id field in order and return array 1st index

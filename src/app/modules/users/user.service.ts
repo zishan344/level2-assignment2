@@ -39,3 +39,45 @@ export const createOrderIntoDB = async (id: number, data: IOrders) => {
   );
   return result;
 };
+export const getUserOrderbyIdIntoDB = async (id: number) => {
+  const result = await User.findOne({ userId: id }, "orders");
+  return result;
+};
+export const getTotalOrderPriceIntoDB = async (id: number) => {
+  const result = User.aggregate([
+    {
+      $match: {
+        userId: id,
+      },
+    },
+    {
+      $unwind: "$orders",
+    },
+    {
+      $project: {
+        tempId: 1,
+        value: { $multiply: ["$orders.price", "$orders.quantity"] },
+      },
+    },
+    {
+      $group: {
+        _id: "$tempId",
+        totalValue: { $sum: "$value" },
+      },
+    },
+  ]);
+  /*   const result = User.aggregate([
+    {
+      $group: {
+        userid: id,
+        totalValue: {
+          $sum: {
+            $sum: "orders.data.price",
+          },
+        },
+      },
+    },
+  ]); */
+
+  return result;
+};

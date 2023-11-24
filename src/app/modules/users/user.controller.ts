@@ -3,7 +3,9 @@ import {
   createOrderIntoDB,
   createUserIntoDB,
   deleteUserIntoDB,
+  getTotalOrderPriceIntoDB,
   getUserIntoDB,
+  getUserOrderbyIdIntoDB,
   getUserWithIDIntoDB,
   updateUserIntoDB,
 } from "./user.service";
@@ -125,13 +127,55 @@ const createOrder = async (req: Request, res: Response) => {
     const result = await createOrderIntoDB(Number(id), zodParseData);
     res.status(200).json({
       success: true,
-      message: "Users deleted successfully!",
+      message: "create order successfully!",
       data: result,
     });
   } catch (err) {
     res.status(404).json({
       success: false,
-      message: "User not found",
+      message: "can't create order",
+      error: {
+        code: 404,
+        description: err,
+      },
+    });
+  }
+};
+const getAllUserOrders = async (req: Request, res: Response) => {
+  const id = req.params.userId;
+
+  try {
+    const result = await getUserOrderbyIdIntoDB(Number(id));
+    res.status(200).json({
+      success: true,
+      message: "Order getting successfully!",
+      data: result,
+    });
+  } catch (err) {
+    res.status(404).json({
+      success: false,
+      message: "orders not found",
+      error: {
+        code: 404,
+        description: err,
+      },
+    });
+  }
+};
+const getTotalOrderPrice = async (req: Request, res: Response) => {
+  const id = req.params.userId;
+
+  try {
+    const result = await getTotalOrderPriceIntoDB(Number(id));
+    res.status(200).json({
+      success: true,
+      message: "Total price calculated successfully!",
+      data: result,
+    });
+  } catch (err) {
+    res.status(404).json({
+      success: false,
+      message: "amount not found",
       error: {
         code: 404,
         description: err,
@@ -147,4 +191,6 @@ export const userController = {
   updateUser,
   deleteUser,
   createOrder,
+  getAllUserOrders,
+  getTotalOrderPrice,
 };
