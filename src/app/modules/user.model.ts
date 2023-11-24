@@ -1,6 +1,6 @@
-import { Schema, model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 import { IAddress, IFullName, IOrders, IUser } from "./users/user.interface";
-
+import bcrypt from "bcrypt";
 const FullNameSchema = new Schema<IFullName>({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
@@ -16,20 +16,58 @@ const OrdersSchema = new Schema<IOrders>({
   quantity: { type: Number, required: true },
 });
 
-const userSchema = new Schema<IUser>({
-  userId: { type: Number, required: true, unique: true },
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  fullName: { type: FullNameSchema, required: true },
-  age: { type: Number, required: true },
-  isActive: { type: Boolean, required: true },
-  hobbies: { type: [String], required: true },
-  address: {
-    type: AddressSchema,
-    required: true,
+const userSchema = new Schema<IUser>(
+  {
+    userId: { type: Number, required: true, unique: true },
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    fullName: { type: FullNameSchema, required: true },
+    age: { type: Number, required: true },
+    isActive: { type: Boolean, required: true },
+    hobbies: { type: [String], required: true },
+    address: {
+      type: AddressSchema,
+      required: true,
+    },
+    email: { type: String, required: true, unique: true },
+    orders: { type: [OrdersSchema] },
   },
-  email: { type: String, required: true, unique: true },
-  orders: { type: [OrdersSchema] },
+
+  {
+    toJSON: { virtual: true },
+    toObject: { virtual: true },
+  }
+);
+
+userSchema.pre("save", async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  const saltRounds = 10;
+  user.password = await bcrypt.hash(user.password, saltRounds);
+  // console.log(hashPass);
+  next();
 });
+userSchema.post("save", async function (doc, next) {
+  const userWithoutPassword: {
+    _id: Types.ObjectId;
+    password?: undefined;
+  } = doc.toObject();
+
+  delete userWithoutPassword.password;
+  next();
+});
+userSchema.pre("find", async function (next) {
+  this.select("-password -orders");
+
+  // console.log(hashPass);
+  next();
+});
+userSchema.pre("findOne", async function (next) {
+  this.select("-password -orders");
+
+  // console.log(hashPass);
+  next();
+});
+
 const User = model<IUser>("users", userSchema);
 export default User;

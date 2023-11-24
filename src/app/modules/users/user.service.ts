@@ -1,10 +1,18 @@
+import { Document, Types } from "mongoose";
 import User from "../user.model";
 import { IOrders, IUser } from "./user.interface";
 
 // user
 export const createUserIntoDB = async (data: IUser) => {
-  const result = await User.create(data);
-  return result;
+  const result: Document<unknown, Record<string, never>, IUser> &
+    IUser & {
+      _id: Types.ObjectId;
+      password: string;
+    } = await User.create(data);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password, orders, ...userWithoutSensitiveInfo } = result.toObject();
+
+  return userWithoutSensitiveInfo;
 };
 export const getUserIntoDB = async () => {
   const result = await User.find();
@@ -62,7 +70,7 @@ export const getTotalOrderPriceIntoDB = async (id: number) => {
     {
       $group: {
         _id: "$tempId",
-        totalValue: { $sum: "$value" },
+        totalPrice: { $sum: "$value" },
       },
     },
   ]);
