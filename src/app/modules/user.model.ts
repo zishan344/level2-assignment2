@@ -16,28 +16,22 @@ const OrdersSchema = new Schema<IOrders>({
   quantity: { type: Number, required: true },
 });
 
-const userSchema = new Schema<IUser>(
-  {
-    userId: { type: Number, required: true, unique: true },
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    fullName: { type: FullNameSchema, required: true, _id: false },
-    age: { type: Number, required: true },
-    isActive: { type: Boolean, required: true },
-    hobbies: { type: [String], required: true },
-    address: {
-      type: AddressSchema,
-      required: true,
-      _id: false,
-    },
-    email: { type: String, required: true, unique: true },
-    orders: { type: [OrdersSchema], _id: false },
+const userSchema = new Schema<IUser>({
+  userId: { type: Number, required: true, unique: true },
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  fullName: { type: FullNameSchema, required: true, _id: false },
+  age: { type: Number, required: true },
+  isActive: { type: Boolean, required: true },
+  hobbies: { type: [String], required: true },
+  address: {
+    type: AddressSchema,
+    required: true,
+    _id: false,
   },
-  {
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
-  }
-);
+  email: { type: String, required: true, unique: true },
+  orders: { type: [OrdersSchema], _id: false },
+});
 
 userSchema.pre("save", async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias

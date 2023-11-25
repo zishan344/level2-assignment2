@@ -43,7 +43,7 @@ export const updateUserIntoDB = async (
       if (Array.isArray(data[key])) {
         // Check if the array is empty before merging
         newData[key] = Array.isArray(newData[key])
-          ? [...(newData[key] as any[]), ...(data[key] as any[])]
+          ? [...(newData[key] as unknown[]), ...(data[key] as unknown[])]
           : data[key];
       } else if (typeof data[key] === "object" && data[key] !== null) {
         // Merge objects
@@ -65,6 +65,7 @@ export const updateUserIntoDB = async (
     const zodParseData = userValidationSchema.parse(newData);
 
     // Update the user data in the database
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const result = await User.updateOne(
       { userId: id },
       { $set: zodParseData },
@@ -72,6 +73,7 @@ export const updateUserIntoDB = async (
     );
 
     // Exclude sensitive data from the returned result
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { orders, password, ...unsensitiveData } = newData;
     return unsensitiveData;
   } else {
