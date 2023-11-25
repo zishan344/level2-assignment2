@@ -54,12 +54,12 @@ userSchema.pre("find", async function (next) {
   // console.log(hashPass);
   next();
 });
-userSchema.pre("findOne", async function (next) {
-  this.select("-password -orders");
 
+/* userSchema.pre("findOne", async function (next) {
+  this.select("-password -orders");
   // console.log(hashPass);
   next();
-});
+}); */
 
 const User = model<IUser>("users", userSchema);
 export default User;
