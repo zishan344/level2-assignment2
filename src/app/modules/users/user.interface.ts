@@ -12,6 +12,7 @@ export interface IAddress {
   city: string;
   country: string;
 }
+
 export interface IUser {
   userId: number;
   username: string;
@@ -23,4 +24,17 @@ export interface IUser {
   hobbies: string[];
   address: IAddress;
   orders?: IOrders[];
+  // Omit the index signature
 }
+
+// Mapped type for additional properties
+export type IUserWithAdditionalProps = IUser & {
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | IFullName
+    | IAddress
+    | IOrders[]
+    | undefined;
+};

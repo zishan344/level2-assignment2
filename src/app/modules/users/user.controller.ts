@@ -24,13 +24,13 @@ const createUser = async (req: Request, res: Response) => {
       message: "User created successfully!",
       data: result,
     });
-  } catch (err: any) {
+  } catch (err) {
     res.status(404).json({
       success: false,
       message: "User not created",
       error: {
         code: 404,
-        description: err.message,
+        description: (err as Error).message,
       },
     });
   }
@@ -43,13 +43,13 @@ const getAllUser = async (req: Request, res: Response) => {
       message: "Users fetched successfully!",
       data: result,
     });
-  } catch (err: any) {
+  } catch (err) {
     res.status(404).json({
       success: false,
       message: "User not found",
       error: {
         code: 404,
-        description: err.message,
+        description: (err as Error).message,
       },
     });
   }
@@ -80,7 +80,7 @@ const getUserById = async (req: Request, res: Response) => {
       message: "User not found",
       error: {
         code: 404,
-        description: err.message,
+        description: (err as Error).message,
       },
     });
   }

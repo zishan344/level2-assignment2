@@ -34,14 +34,16 @@ const userSchema = new Schema<IUser>(
   },
 
   {
-    toJSON: { virtual: true },
-    toObject: { virtual: true },
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
 
 userSchema.pre("save", async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
+
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user: IUser = this;
   const saltRounds = 10;
   user.password = await bcrypt.hash(user.password, saltRounds);
   // console.log(hashPass);
