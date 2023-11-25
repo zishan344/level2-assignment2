@@ -21,18 +21,18 @@ const userSchema = new Schema<IUser>(
     userId: { type: Number, required: true, unique: true },
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    fullName: { type: FullNameSchema, required: true },
+    fullName: { type: FullNameSchema, required: true, _id: false },
     age: { type: Number, required: true },
     isActive: { type: Boolean, required: true },
     hobbies: { type: [String], required: true },
     address: {
       type: AddressSchema,
       required: true,
+      _id: false,
     },
     email: { type: String, required: true, unique: true },
-    orders: { type: [OrdersSchema] },
+    orders: { type: [OrdersSchema], _id: false },
   },
-
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
@@ -51,7 +51,7 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.pre("find", async function (next) {
-  this.select("-password -orders");
+  this.select("-password -orders -hobbies -userId -isActive");
 
   // console.log(hashPass);
   next();
