@@ -10,5 +10,15 @@ app.get("/", (req: Request, res: Response) => {
   const i = "hallo world";
   res.send(i);
 });
+app.get("*", (req: Request, res: Response) => {
+  res.status(400).json({
+    success: false,
+    message: "Invalid Route",
+    error: {
+      code: 404,
+      description: "Invalid route!",
+    },
+  });
+});
 
 export default app;
